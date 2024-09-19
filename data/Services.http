@@ -11,9 +11,21 @@ Content-Type: application/json
   "defaultLogLevel": "INFO"
 }
 
-###
-
+### Récupérer tous les services
 GET http://localhost:3000/api/services
-Accept: application/json
 
-###
+### Récupérer un service par ID
+GET http://localhost:3000/api/services/1
+
+### Mettre à jour un service
+PUT http://localhost:3000/api/services/1
+Content-Type: application/json
+
+{
+  "description": "Nouvelle description pour Service A",
+  "defaultLogLevel": "DEBUG"
+}
+
+### Supprimer un service
+DELETE http://localhost:3000/api/services/1
+

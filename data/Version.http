@@ -1,0 +1,28 @@
+### Créer une nouvelle version
+POST http://localhost:3000/api/versions
+Content-Type: application/json
+
+{
+  "versionNumber": "1.0.0",
+  "commitHash": "abc123def",
+  "releaseDate": "2024-09-19",
+  "serviceId": 1
+}
+### Récupérer toutes les versions
+GET http://localhost:3000/api/versions
+
+### Récupérer une version par ID
+GET http://localhost:3000/api/versions/1
+
+### Mettre à jour une version
+PUT http://localhost:3000/api/versions/1
+Content-Type: application/json
+
+{
+  "versionNumber": "1.0.1",
+  "commitHash": "def456ghi",
+  "serviceId": 1
+}
+
+### Supprimer une version
+DELETE http://localhost:3000/api/versions/1

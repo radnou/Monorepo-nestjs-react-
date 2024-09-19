@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {CreateServiceDto} from './dto/create-service.dto';
 import {UpdateServiceDto} from './dto/update-service.dto';
 import {ServiceVersion} from "./entities/service-version.entity";
@@ -29,20 +29,34 @@ export class ServicesService {
 
     return service;
   }
-
-  findAll() {
-    return `This action returns all services`;
+  async findAll(): Promise<Service[]> {
+    return await this.servicesRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} service`;
+  async findOne(id: number): Promise<Service> {
+    const service = await this.servicesRepository.findOne({ where: { id } });
+    if (!service) {
+      throw new NotFoundException(`Service with ID ${id} not found`);
+    }
+    return service;
   }
 
-  update(id: number, updateServiceDto: UpdateServiceDto) {
-    return `This action updates a #${id} service`;
+  async update(
+    id: number,
+    updateServiceDto: UpdateServiceDto,
+  ): Promise<Service> {
+    const service = await this.servicesRepository.preload({
+      id: id,
+      ...updateServiceDto,
+    });
+    if (!service) {
+      throw new NotFoundException(`Service with ID ${id} not found`);
+    }
+    return await this.servicesRepository.save(service);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} service`;
+  async remove(id: number): Promise<void> {
+    const service = await this.findOne(id);
+    await this.servicesRepository.remove(service);
   }
 }
