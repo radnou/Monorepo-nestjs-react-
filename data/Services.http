@@ -1,0 +1,19 @@
+### POST request
+POST http://localhost:3000/api/services
+Content-Type: application/json
+
+{
+  "name": "Service A",
+  "description": "Description du service A",
+  "gitRepoUrl": "https://github.com/votre-repo/service-a.git",
+  "configDirectory": "/config/service-a",
+  "logDirectory": "/logs/service-a",
+  "defaultLogLevel": "INFO"
+}
+
+###
+
+GET http://localhost:3000/api/services
+Accept: application/json
+
+###
