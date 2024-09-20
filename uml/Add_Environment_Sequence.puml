@@ -1,0 +1,13 @@
+@startuml
+actor Utilisateur
+participant "EnvironmentsController" as EnvController
+participant "EnvironmentsService" as EnvService
+database "EnvironmentRepository" as EnvRepo
+
+Utilisateur -> EnvController : POST /environments
+EnvController -> EnvService : create(createEnvironmentDto)
+EnvService -> EnvRepo : save(environment)
+EnvRepo --> EnvService : environment
+EnvService --> EnvController : environment
+EnvController --> Utilisateur : 201 Created (environment)
+@enduml

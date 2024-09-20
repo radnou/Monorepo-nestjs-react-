@@ -1,0 +1,16 @@
+@startuml
+actor Utilisateur
+participant "VersionsController" as VersionsController
+participant "VersionsService" as VersionsService
+database "VersionRepository" as VersionRepo
+database "ServiceRepository" as ServiceRepo
+
+Utilisateur -> VersionsController : POST /versions
+VersionsController -> VersionsService : create(createVersionDto)
+VersionsService -> ServiceRepo : findOne(serviceId)
+ServiceRepo --> VersionsService : service
+VersionsService -> VersionRepo : save(version)
+VersionRepo --> VersionsService : version
+VersionsService --> VersionsController : version
+VersionsController --> Utilisateur : 201 Created (version)
+@enduml

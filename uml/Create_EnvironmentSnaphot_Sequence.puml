@@ -1,0 +1,19 @@
+@startuml
+actor Utilisateur
+participant "EnvironmentSnapshotsController" as SnapController
+participant "EnvironmentSnapshotsService" as SnapService
+database "EnvironmentSnapshotRepository" as SnapRepo
+database "EnvironmentRepository" as EnvRepo
+database "ServiceVersionRepository" as SVRepo
+
+Utilisateur -> SnapController : POST /environment-snapshots
+SnapController -> SnapService : create(createSnapshotDto)
+SnapService -> EnvRepo : findOne(createSnapshotDto.environmentId)
+EnvRepo --> SnapService : environment
+SnapService -> SVRepo : findCurrentServiceVersions(environment)
+SVRepo --> SnapService : serviceVersions
+SnapService -> SnapRepo : save(snapshot)
+SnapRepo --> SnapService : snapshot
+SnapService --> SnapController : snapshot
+SnapController --> Utilisateur : 201 Created (snapshot)
+@enduml

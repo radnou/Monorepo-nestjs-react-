@@ -1,0 +1,15 @@
+@startuml
+actor Utilisateur
+participant "ServicesController" as Controller
+participant "ServicesService" as ServiceLayer
+database "ServiceRepository" as Repository
+
+Utilisateur -> Controller : PUT /services/{id}
+Controller -> ServiceLayer : update(id, updateServiceDto)
+ServiceLayer -> Repository : findOne(id)
+Repository --> ServiceLayer : service
+ServiceLayer -> Repository : save(updatedService)
+Repository --> ServiceLayer : updatedService
+ServiceLayer --> Controller : updatedService
+Controller --> Utilisateur : 200 OK (updatedService)
+@enduml

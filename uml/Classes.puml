@@ -1,0 +1,123 @@
+@startuml
+hide circle
+skinparam classAttributeIconSize 0
+
+class Service {
+  - id: number
+  - name: string
+  - description: string
+  - gitRepoUrl: string
+  - gerritUrl: string
+  - configDirectory: string
+  - logDirectory: string
+  - defaultLogLevel: string
+  --
+  + versions: Version[]
+  + configurations: Configuration[]
+  + dependencies: Dependency[]
+}
+
+class Version {
+  - id: number
+  - versionNumber: string
+  - commitHash: string
+  - releaseDate: Date
+  --
+  + service: Service
+  + artefacts: Artefact[]
+  + migrationScripts: MigrationScript[]
+}
+
+class Artefact {
+  - id: number
+  - type: string
+  - nexusUrl: string
+  --
+  + version: Version
+}
+
+class MigrationScript {
+  - id: number
+  - scriptName: string
+  - scriptContent: string
+  --
+  + version: Version
+}
+
+class Configuration {
+  - id: number
+  - key: string
+  - value: string
+  --
+  + service: Service
+  + environment: Environment
+}
+
+class Dependency {
+  - id: number
+  - dependencyType: string
+  --
+  + service: Service
+  + dependsOnService: Service
+}
+
+class Credential {
+  - id: number
+  - serviceType: string
+  - username: string
+  - encryptedPassword: string
+  --
+  + environment: Environment
+}
+
+class Environment {
+  - id: number
+  - name: string
+  --
+  + configurations: Configuration[]
+  + credentials: Credential[]
+}
+
+class EnvironmentSnapshot {
+  - id: number
+  - name: string
+  - description: string
+  - creationDate: Date
+  --
+  + snapshotServiceVersions: SnapshotServiceVersion[]
+}
+
+class ServiceVersion {
+  - id: number
+  --
+  + service: Service
+  + version: Version
+  + snapshotServiceVersions: SnapshotServiceVersion[]
+}
+
+class SnapshotServiceVersion {
+  - id: number
+  --
+  + snapshot: EnvironmentSnapshot
+  + serviceVersion: ServiceVersion
+}
+
+' Relations entre les classes
+Service "1" --> "0..*" Version : versions
+Version "1" --> "0..*" Artefact : artefacts
+Version "1" --> "0..*" MigrationScript : migrationScripts
+Version "1" --> "1" Service : service
+
+Service "1" --> "0..*" Configuration : configurations
+Configuration "0..*" --> "1" Environment : environment
+
+Service "1" --> "0..*" Dependency : dependencies
+Dependency "1" --> "1" Service : dependsOnService
+
+Environment "1" --> "0..*" Credential : credentials
+
+EnvironmentSnapshot "1" --> "0..*" SnapshotServiceVersion : snapshotServiceVersions
+SnapshotServiceVersion "1" --> "1" ServiceVersion : serviceVersion
+ServiceVersion "1" --> "1" Service : service
+ServiceVersion "1" --> "1" Version : version
+@enduml

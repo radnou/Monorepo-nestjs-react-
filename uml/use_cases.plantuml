@@ -1,0 +1,19 @@
+@startuml
+left to right direction
+
+actor Utilisateur
+
+usecase "Gérer les Services" as UC_GererServices
+usecase "Gérer les Versions" as UC_GererVersions
+usecase "Gérer les Configurations" as UC_GererConfigurations
+usecase "Gérer les Dépendances" as UC_GererDependances
+usecase "Gérer les Environnements" as UC_GererEnvironnements
+usecase "Gérer les Snapshots" as UC_GererSnapshots
+
+Utilisateur --> UC_GererServices
+Utilisateur --> UC_GererVersions
+Utilisateur --> UC_GererConfigurations
+Utilisateur --> UC_GererDependances
+Utilisateur --> UC_GererEnvironnements
+Utilisateur --> UC_GererSnapshots
+@enduml

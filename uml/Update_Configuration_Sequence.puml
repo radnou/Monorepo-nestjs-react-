@@ -1,0 +1,16 @@
+@startuml
+actor Utilisateur
+participant "ConfigurationsController" as ConfigController
+participant "ConfigurationsService" as ConfigService
+database "ConfigurationRepository" as ConfigRepo
+
+Utilisateur -> ConfigController : PUT /configurations/{id}
+ConfigController -> ConfigService : update(id, updateConfigurationDto)
+ConfigService -> ConfigRepo : findOne(id)
+ConfigRepo --> ConfigService : configuration
+ConfigService -> ConfigRepo : save(updatedConfiguration)
+ConfigRepo --> ConfigService : updatedConfiguration
+ConfigService --> ConfigController : updatedConfiguration
+ConfigController --> Utilisateur : 200 OK (updatedConfiguration)
+@enduml
+

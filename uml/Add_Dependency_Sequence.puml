@@ -1,0 +1,18 @@
+@startuml
+actor Utilisateur
+participant "DependenciesController" as DepController
+participant "DependenciesService" as DepService
+database "DependencyRepository" as DepRepo
+database "ServiceRepository" as ServiceRepo
+
+Utilisateur -> DepController : POST /dependencies
+DepController -> DepService : create(createDependencyDto)
+DepService -> ServiceRepo : findOne(createDependencyDto.serviceId)
+ServiceRepo --> DepService : service
+DepService -> ServiceRepo : findOne(createDependencyDto.dependsOnServiceId)
+ServiceRepo --> DepService : dependsOnService
+DepService -> DepRepo : save(dependency)
+DepRepo --> DepService : dependency
+DepService --> DepController : dependency
+DepController --> Utilisateur : 201 Created (dependency)
+@enduml

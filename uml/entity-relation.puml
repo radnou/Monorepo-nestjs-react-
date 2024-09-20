@@ -1,0 +1,92 @@
+@startuml
+entity Service {
+  * id : number
+  --
+  * name : string
+  * description : string
+  * gitRepoUrl : string
+}
+
+entity Version {
+  * id : number
+  --
+  * versionNumber : string
+  * commitHash : string
+}
+
+entity Artefact {
+  * id : number
+  --
+  * type : string
+  * nexusUrl : string
+}
+
+entity MigrationScript {
+  * id : number
+  --
+  * scriptName : string
+  * scriptContent : string
+}
+
+entity Configuration {
+  * id : number
+  --
+  * key : string
+  * value : string
+}
+
+entity Environment {
+  * id : number
+  --
+  * name : string
+}
+
+entity Dependency {
+  * id : number
+  --
+  * dependencyType : string
+}
+
+entity Credential {
+  * id : number
+  --
+  * serviceType : string
+  * username : string
+  * encryptedPassword : string
+}
+
+entity EnvironmentSnapshot {
+  * id : number
+  --
+  * name : string
+  * description : string
+}
+
+entity ServiceVersion {
+  * id : number
+}
+
+entity SnapshotServiceVersion {
+  * id : number
+}
+
+' Relations
+Service ||--o{ Version : versions
+Version }o--|| Service : service
+
+Version ||--o{ Artefact : artefacts
+Version ||--o{ MigrationScript : migrationScripts
+
+Service ||--o{ Configuration : configurations
+Configuration }o--|| Environment : environment
+
+Service ||--o{ Dependency : dependencies
+Dependency }o--|| Service : dependsOnService
+
+Environment ||--o{ Credential : credentials
+
+EnvironmentSnapshot ||--o{ SnapshotServiceVersion : snapshotServiceVersions
+SnapshotServiceVersion }o--|| ServiceVersion : serviceVersion
+ServiceVersion }o--|| Service : service
+ServiceVersion }o--|| Version : version
+@enduml

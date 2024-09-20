@@ -1,0 +1,13 @@
+@startuml
+actor Utilisateur
+participant "ServicesController" as Controller
+participant "ServicesService" as ServiceLayer
+database "ServiceRepository" as Repository
+
+Utilisateur -> Controller : POST /services
+Controller -> ServiceLayer : create(createServiceDto)
+ServiceLayer -> Repository : save(service)
+Repository --> ServiceLayer : service
+ServiceLayer --> Controller : service
+Controller --> Utilisateur : 201 Created (service)
+@enduml

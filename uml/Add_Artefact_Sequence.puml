@@ -1,0 +1,16 @@
+@startuml
+actor Utilisateur
+participant "ArtefactsController" as ArtefactsController
+participant "ArtefactsService" as ArtefactsService
+database "ArtefactRepository" as ArtefactRepo
+database "VersionRepository" as VersionRepo
+
+Utilisateur -> ArtefactsController : POST /artefacts
+ArtefactsController -> ArtefactsService : create(createArtefactDto)
+ArtefactsService -> VersionRepo : findOne(createArtefactDto.versionId)
+VersionRepo --> ArtefactsService : version
+ArtefactsService -> ArtefactRepo : save(artefact)
+ArtefactRepo --> ArtefactsService : artefact
+ArtefactsService --> ArtefactsController : artefact
+ArtefactsController --> Utilisateur : 201 Created (artefact)
+@enduml

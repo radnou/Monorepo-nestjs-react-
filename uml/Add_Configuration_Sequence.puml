@@ -1,0 +1,19 @@
+@startuml
+actor Utilisateur
+participant "ConfigurationsController" as ConfigController
+participant "ConfigurationsService" as ConfigService
+database "ConfigurationRepository" as ConfigRepo
+database "ServiceRepository" as ServiceRepo
+database "EnvironmentRepository" as EnvRepo
+
+Utilisateur -> ConfigController : POST /configurations
+ConfigController -> ConfigService : create(createConfigurationDto)
+ConfigService -> ServiceRepo : findOne(createConfigurationDto.serviceId)
+ServiceRepo --> ConfigService : service
+ConfigService -> EnvRepo : findOne(createConfigurationDto.environmentId)
+EnvRepo --> ConfigService : environment
+ConfigService -> ConfigRepo : save(configuration)
+ConfigRepo --> ConfigService : configuration
+ConfigService --> ConfigController : configuration
+ConfigController --> Utilisateur : 201 Created (configuration)
+@enduml

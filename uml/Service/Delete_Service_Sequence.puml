@@ -1,0 +1,14 @@
+@startuml
+actor Utilisateur
+participant "ServicesController" as Controller
+participant "ServicesService" as ServiceLayer
+database "ServiceRepository" as Repository
+
+Utilisateur -> Controller : DELETE /services/{id}
+Controller -> ServiceLayer : remove(id)
+ServiceLayer -> Repository : findOne(id)
+Repository --> ServiceLayer : service
+ServiceLayer -> Repository : remove(service)
+ServiceLayer --> Controller : void
+Controller --> Utilisateur : 204 No Content
+@enduml
