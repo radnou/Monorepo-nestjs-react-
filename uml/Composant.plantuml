@@ -1,0 +1,24 @@
+@startuml
+component "Microservices Launcher" {
+  component "API Backend" as Backend {
+    component "ServicesModule"
+    component "VersionsModule"
+    component "ArtefactsModule"
+    component "ConfigurationsModule"
+    component "DependenciesModule"
+    component "CredentialsModule"
+    component "EnvironmentsModule"
+    component "EnvironmentSnapshotsModule"
+    component "MigrationScriptsModule"
+  }
+
+  component "Database" as DB
+}
+
+Backend --> DB : TypeORM
+
+actor "Utilisateur" as User
+
+User --> Backend : Requêtes HTTP
+
+@enduml

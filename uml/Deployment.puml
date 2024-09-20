@@ -1,0 +1,18 @@
+@startuml
+node "Serveur Applicatif" {
+  component "Microservices Launcher Application" as App {
+    [NestJS Application]
+  }
+}
+
+node "Base de Données" {
+  database "SQLite Database" as SQLite
+}
+
+App --> SQLite : Connexion via TypeORM
+
+actor "Utilisateur" as User
+
+User --> App : Requêtes HTTP
+
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+start
+:Utilisateur initie le déploiement d'un service;
+:Sélectionner le service;
+:Sélectionner la version du service;
+:Sélectionner le type de lancement;
+note right
+Type de lancement :
+- Source
+- RPM
+- Conteneur
+end note
+:Afficher un résumé des paramètres sélectionnés;
+if (Utilisateur confirme le déploiement ?) then (Oui)
+  :Préparer l'environnement de déploiement;
+  if (Type de lancement == Source) then (Oui)
+    :Cloner le dépôt Git du service;
+    :Installer les dépendances du code source;
+    :Compiler le code si nécessaire;
+  elseif (Type de lancement == RPM) then (Oui)
+    :Télécharger le package RPM;
+    :Installer le package RPM;
+  elseif (Type de lancement == Conteneur) then (Oui)
+    :Récupérer l'image du conteneur;
+    :Démarrer le conteneur;
+  endif
+  :Vérifier les dépendances du service;
+  if (Dépendances manquantes ?) then (Oui)
+    :Installer les dépendances manquantes;
+  endif
+  :Démarrer le service;
+  :Mettre à jour l'état du déploiement;
+  :Notifier l'utilisateur du succès;
+else (Non)
+  :Annuler le déploiement;
+endif
+stop
+@enduml
