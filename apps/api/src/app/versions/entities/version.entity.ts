@@ -18,7 +18,7 @@ export class Version {
   @Column({type: 'date', nullable: true})
   releaseDate: Date;
 
-  @ManyToOne(() => Service, (service) => service.versions)
+  @ManyToOne(() => Service, (service) => service.versions, {onDelete: 'CASCADE'})
   service: Service;
 
   @OneToMany(() => Artefact, (artefact) => artefact.version)

@@ -1,0 +1,27 @@
+@startuml
+start
+:Utilisateur initie le déploiement d'un service;
+:Sélectionner le service;
+:Sélectionner la version du service;
+:Sélectionner le type de lancement;
+:Afficher un résumé des paramètres sélectionnés;
+if (Utilisateur confirme le déploiement ?) then (Oui)
+  :Préparer l'environnement de déploiement;
+  if (Préparation réussie ?) then (Oui)
+    :Procéder au déploiement;
+    if (Déploiement réussi ?) then (Oui)
+      :Mettre à jour l'état du déploiement;
+      :Notifier l'utilisateur du succès;
+    else (Non)
+      :Enregistrer l'erreur;
+      :Notifier l'utilisateur de l'échec;
+      :Proposer un rollback ou une assistance;
+    endif
+  else (Non)
+    :Notifier l'utilisateur de l'échec de la préparation;
+  endif
+else (Non)
+  :Annuler le déploiement;
+endif
+stop
+@enduml

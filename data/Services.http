@@ -18,11 +18,11 @@ GET http://localhost:3000/api/services
 GET http://localhost:3000/api/services/1
 
 ### Mettre à jour un service
-PUT http://localhost:3000/api/services/1
+PATCH http://localhost:3000/api/services/1
 Content-Type: application/json
 
 {
-  "description": "Nouvelle description pour Service A",
+  "description": "Nouvelle description pour Service 1",
   "defaultLogLevel": "DEBUG"
 }
 

@@ -1,7 +1,7 @@
 GET http://localhost:3000/api/environments
 Accept: application/json
 
-###
+### Ajout d'un environement
 POST http://localhost:3000/api/environments
 Content-Type: application/json
 
@@ -9,4 +9,21 @@ Content-Type: application/json
   "name": "dev"
 }
 
-###
+### GET specify Environment
+GET localhost:3000/api/environments/1
+
+{}
+
+### Update specify Environment
+PATCH localhost:3000/api/environments/1
+
+{
+  "name": "devPatched"
+}
+
+### Get specific environment
+GET localhost:3000/api/environments/1
+
+
+### DELETE specify Environment
+DELETE localhost:3000/api/environments/

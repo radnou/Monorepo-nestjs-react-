@@ -25,4 +25,4 @@ Content-Type: application/json
 }
 
 ### Supprimer une version
-DELETE http://localhost:3000/api/versions/1
+#DELETE http://localhost:3000/api/versions/1

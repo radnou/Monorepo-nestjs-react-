@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { EnvironmentsService } from './environments.service';
 import { CreateEnvironmentDto } from './dto/create-environment.dto';
 import { UpdateEnvironmentDto } from './dto/update-environment.dto';
+import {Environment} from "./entities/environment.entity";
 
 @Controller('environments')
 export class EnvironmentsController {
@@ -23,7 +24,7 @@ export class EnvironmentsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEnvironmentDto: UpdateEnvironmentDto) {
+  update(@Param('id') id: string, @Body() updateEnvironmentDto: UpdateEnvironmentDto):Promise<Environment> {
     return this.environmentsService.update(+id, updateEnvironmentDto);
   }
 
