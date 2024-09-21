@@ -24,7 +24,6 @@ import {SnapshotServiceVersion} from "./environment-snapshots/entities/snapshot-
 import {Environment} from "./environments/entities/environment.entity";
 import {MigrationScript} from "./migration-scripts/entities/migration-script.entity";
 import {ServiceVersion} from "./services/entities/service-version.entity";
-import {glob} from "nx/src/generators/utils/glob";
 
 
 @Module({

@@ -1,4 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany} from 'typeorm';
 import {Version} from '../../versions/entities/version.entity';
 import {Configuration} from '../../configurations/entities/configuration.entity';
 import {Dependency} from '../../dependencies/entities/dependency.entity';
