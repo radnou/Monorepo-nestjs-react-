@@ -1,26 +1,52 @@
-import { Injectable } from '@nestjs/common';
-import { CreateConfigurationDto } from './dto/create-configuration.dto';
-import { UpdateConfigurationDto } from './dto/update-configuration.dto';
+import {Injectable, NotFoundException} from '@nestjs/common';
+import {CreateConfigurationDto} from './dto/create-configuration.dto';
+import {UpdateConfigurationDto} from './dto/update-configuration.dto';
+import {Configuration} from "./entities/configuration.entity";
+import {Repository} from "typeorm";
+import {InjectRepository} from "@nestjs/typeorm";
 
 @Injectable()
 export class ConfigurationsService {
-  create(createConfigurationDto: CreateConfigurationDto) {
-    return 'This action adds a new configuration';
+
+  constructor(
+    @InjectRepository(Configuration)
+    private configurationsRepository: Repository<Configuration>
+  ) {
   }
 
-  findAll() {
-    return `This action returns all configurations`;
+  async create(createConfigurationDto: CreateConfigurationDto): Promise<Configuration> {
+    const configuration = this.configurationsRepository.create(createConfigurationDto);
+    await this.configurationsRepository.save(configuration);
+    return configuration;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} configuration`;
+  async findAll(): Promise<Configuration[]> {
+
+    return await this.configurationsRepository.find()
   }
 
-  update(id: number, updateConfigurationDto: UpdateConfigurationDto) {
-    return `This action updates a #${id} configuration`;
+  async findOne(id: number): Promise<Configuration> {
+    const configuration = await this.configurationsRepository.findOne(
+      {where: {id}}
+    );
+    if (!configuration) {
+      throw new NotFoundException(`Configuration with ID ${id} not found`);
+    }
+    return configuration;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} configuration`;
+  async update(id: number, updateConfigurationDto: UpdateConfigurationDto): Promise<Configuration> {
+    const configuration = this.configurationsRepository.preload({id, ...updateConfigurationDto});
+    if (!configuration) {
+      throw new NotFoundException(`Configuration with ID ${id} not found`);
+    }
+    return await this.configurationsRepository.save(updateConfigurationDto);
+  }
+
+
+
+  async remove(id: number): Promise<void> {
+    const configuration = await this.findOne(+id);
+    await this.configurationsRepository.remove(configuration);
   }
 }
