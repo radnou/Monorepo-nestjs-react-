@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEnvironmentSnapshotDto } from './dto/create-environment-snapshot.dto';
 import { UpdateEnvironmentSnapshotDto } from './dto/update-environment-snapshot.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { EnvironmentSnapshot } from './entities/environment-snapshot.entity';
 
 @Injectable()
 export class EnvironmentSnapshotsService {
-  create(createEnvironmentSnapshotDto: CreateEnvironmentSnapshotDto) {
-    return 'This action adds a new environmentSnapshot';
+  constructor(
+    @InjectRepository(EnvironmentSnapshot)
+    private environmentSnapshotsRepository: Repository<EnvironmentSnapshot>,
+  ) {}
+
+  async create(createEnvironmentSnapshotDto: CreateEnvironmentSnapshotDto): Promise<EnvironmentSnapshot> {
+    const snapshot = this.environmentSnapshotsRepository.create(createEnvironmentSnapshotDto);
+    return await this.environmentSnapshotsRepository.save(snapshot);
   }
 
-  findAll() {
-    return `This action returns all environmentSnapshots`;
+  async findAll(): Promise<EnvironmentSnapshot[]> {
+    return await this.environmentSnapshotsRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} environmentSnapshot`;
+  async findOne(id: number): Promise<EnvironmentSnapshot> {
+    const snapshot = await this.environmentSnapshotsRepository.findOne({ where: { id } });
+    if (!snapshot) {
+      throw new NotFoundException(`Environment Snapshot with ID ${id} not found`);
+    }
+    return snapshot;
   }
 
-  update(id: number, updateEnvironmentSnapshotDto: UpdateEnvironmentSnapshotDto) {
-    return `This action updates a #${id} environmentSnapshot`;
+  async update(id: number, updateEnvironmentSnapshotDto: UpdateEnvironmentSnapshotDto): Promise<EnvironmentSnapshot> {
+    const snapshot = await this.environmentSnapshotsRepository.preload({
+      id,
+      ...updateEnvironmentSnapshotDto,
+    });
+    if (!snapshot) {
+      throw new NotFoundException(`Environment Snapshot with ID ${id} not found`);
+    }
+    return await this.environmentSnapshotsRepository.save(snapshot);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} environmentSnapshot`;
+  async remove(id: number): Promise<void> {
+    const snapshot = await this.findOne(id);
+    await this.environmentSnapshotsRepository.remove(snapshot);
   }
 }
