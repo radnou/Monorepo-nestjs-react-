@@ -9,29 +9,32 @@ import {Service} from "../services/entities/service.entity";
 
 export class DependenciesService {
 
-  constructor(@InjectRepository(Dependency) private dependenciesRepository: Repository<Dependency>,
-              @InjectRepository(Service) private servicesRepository: Repository<Service>) {
-  }
+  constructor(
+    @InjectRepository(Dependency) private dependenciesRepository: Repository<Dependency>,
+    @InjectRepository(Service) private servicesRepository: Repository<Service>,
+  ) {}
 
-  checkService(dependency: Dependency) {
+  async checkService(dependency: Dependency) {
+    // Vérification du service principal
     if (!dependency.service || !dependency.service.id) {
-      const service = this.servicesRepository.findOne(dependency.service);
+      const service = await this.servicesRepository.findOne({ where: { id: dependency.service?.id } });
       if (!service) {
-        throw new NotFoundException(`Service ${dependency.service} not found`);
+        throw new NotFoundException(`Service with ID ${dependency.service?.id} not found`);
       }
     }
-    if (!dependency.dependsOnService || dependency.dependsOnService.id) {
-      const dependsService = this.servicesRepository.findOne(dependency.dependsOnService);
+
+    // Vérification du service dépendant
+    if (!dependency.dependsOnService || !dependency.dependsOnService.id) {
+      const dependsService = await this.servicesRepository.findOne({ where: { id: dependency.dependsOnService?.id } });
       if (!dependsService) {
-        throw new NotFoundException(`Depends on Service ${dependency.dependsOnService} not found`);
+        throw new NotFoundException(`Depends on Service with ID ${dependency.dependsOnService?.id} not found`);
       }
     }
   }
 
   async create(createDependencyDto: CreateDependencyDto): Promise<Dependency> {
     const dependency = this.dependenciesRepository.create(createDependencyDto);
-    this.checkService(dependency);
-
+    await this.checkService(dependency);  // Utilisation de await ici
     await this.dependenciesRepository.save(dependency);
     return dependency;
   }
@@ -40,9 +43,8 @@ export class DependenciesService {
     return await this.dependenciesRepository.find();
   }
 
-
   async findOne(id: number): Promise<Dependency> {
-    const dependency = await this.dependenciesRepository.findOne({where: {id}});
+    const dependency = await this.dependenciesRepository.findOne({ where: { id } });
     if (!dependency) {
       throw new NotFoundException(`Dependency with ID ${id} not found`);
     }
@@ -65,3 +67,4 @@ export class DependenciesService {
     await this.dependenciesRepository.remove(dependency);
   }
 }
+
